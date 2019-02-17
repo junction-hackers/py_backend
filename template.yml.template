@@ -1,0 +1,75 @@
+Transform: 'AWS::Serverless-2016-10-31'
+Parameters :
+  victimBucketName :
+    Type: String
+    Default : victimBucket
+  searcherBucketName :
+    Type: String
+    Default : searcherBucket
+
+Resources:
+  faceDetectVictim:
+    # This resource creates a Lambda function.
+    Type: 'AWS::Serverless::Function'
+
+    Properties:
+      Runtime: python3.7
+      Handler: victim_face_detect.main
+      CodeUri: .
+      Parameters:
+        CLOUDINARY_API_SECRET: ...
+        CLOUDINARY_API_KEY: ...
+	CLOUDINARY_API_NAME: ...
+        RAPID_API_KEY: ...
+        MICROSOFT_REGION: ...
+        MICROSOFT_API_KEY: ...
+        BACKEND_URL: ...
+
+      Events:
+        VictimPhotoUpload:
+          Type: S3
+          Properties:
+            Bucket: !Ref tokyojunctionvictimbucket
+            Events: s3:ObjectCreated:*
+
+      Policies:
+        - S3CrudPolicy:
+            BucketName: !Ref victimBucketName
+
+
+  faceDetectSearch:
+    # This resource creates a Lambda function.
+    Type: 'AWS::Serverless::Function'
+
+    Properties:
+      Runtime: python3.7
+      Handler: victim_face_detect.main
+      CodeUri: .
+      Parameters:
+        CLOUDINARY_API_SECRET: ...
+        CLOUDINARY_API_KEY: ...
+	CLOUDINARY_API_NAME: ...
+        RAPID_API_KEY: ...
+        MICROSOFT_REGION: ...
+        MICROSOFT_API_KEY: ...
+        BACKEND_URL: ...
+
+      Events:
+        SearchPhotoUpload:
+          Type: S3
+          Properties:
+            Bucket: !Ref tokyojunctionsearchbucket
+            Events: s3:ObjectCreated:*
+
+      Policies:
+        - S3CrudPolicy:
+            BucketName: !Ref searcherBucketName
+
+
+  tokyojunctionvictimbucket:
+    BucketName: !Ref victimBucketName
+    Type: AWS::S3::Bucket
+
+  tokyojunctionsearchbucket:
+    BucketName: !Ref searcherBucketName
+    Type: AWS::S3::Bucket
