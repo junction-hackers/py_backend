@@ -1,0 +1,31 @@
+## Deployment
+
+See AWS SAM for more reference.
+
+Template CMD:
+
+  ``` sh
+  sam package \
+  --template-file template.yml \
+  --output-template-file packaged.yml \
+  --s3-bucket <BUCKET NAME>
+
+  aws cloudformation deploy \
+  --template-file packaged.yml \
+  --stack-name <CLOUDFORMATION STACK NAME> \
+  --capabilities CAPABILITY_IAM
+  ```
+
+  Actual CMD:
+    ``` sh
+    /home/linuxbrew/.linuxbrew/bin/sam package \
+    --template-file template.yml \
+    --output-template-file packaged.yml \
+    --s3-bucket jrtempbucket
+
+    aws cloudformation deploy \
+    --template-file ./packaged.yml \
+    --stack-name hacktoncloudapi \
+    --capabilities CAPABILITY_IAM
+    ```
+
